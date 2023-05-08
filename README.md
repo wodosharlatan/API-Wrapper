@@ -1,4 +1,4 @@
-# APIWrap
+# <ADD NAME HERE!>
 
 A C# wrapper for <a href="https://github.com/wodosharlatan/REST-API-DB">my awesome REST API</a>
 
@@ -98,5 +98,5 @@ bool result = await api.UpdateExistingProduct(1, "product_name", "unit", "count"
 The method returns a boolean value indicating whether the operation was successful or not.
 
 # License
-APIWrap is released under the MIT License. See <a href="https://github.com/wodosharlatan/API-Wrapper/edit/main/LICENSE">LICENSE</a> for details.
+<ADD NAME HERE!> is released under the MIT License. See <a href="https://github.com/wodosharlatan/API-Wrapper/edit/main/LICENSE">LICENSE</a> for details.
 
