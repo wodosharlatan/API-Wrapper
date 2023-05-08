@@ -61,5 +61,47 @@ string result = await api.GetAllProducts();
 ```
 The method returns a string containing the JSON response from the API.
 
+!!!
+Getting product by ID
+To get a product by ID from the API, call the GetProductByID method and pass the ID as a parameter:
 
+csharp
+Copy code
+string result = await api.GetProductByID(1);
+The method returns a string containing the JSON response from the API.
+
+Inserting new product
+To insert a new product into the API, call the InsertNewProduct method and pass the product name, unit, count, and added by as parameters:
+
+csharp
+Copy code
+bool result = await api.InsertNewProduct("product_name", "unit", "count", "added_by");
+The method returns a boolean value indicating whether the operation was successful or not.
+
+Deleting product by ID
+To delete a product by ID from the API, call the DeleteProductByID method and pass the ID as a parameter:
+
+csharp
+Copy code
+string result = await api.DeleteProductByID(1);
+The method returns a string containing the JSON response from the API.
+
+Getting count of products
+To get the count of products from the API, call the GetCountOfProducts method:
+
+csharp
+Copy code
+int count = await api.GetCountOfProducts();
+The method returns an integer value containing the count of products.
+
+Updating existing product
+To update an existing product in the API, call the UpdateExistingProduct method and pass the product ID, product name, unit, count, and added by as parameters:
+
+csharp
+Copy code
+bool result = await api.UpdateExistingProduct(1, "product_name", "unit", "count", "added_by");
+The method returns a boolean value indicating whether the operation was successful or not.
+
+License
+APIWrap is released under the MIT License. See LICENSE for details.
 
