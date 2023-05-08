@@ -31,7 +31,7 @@ After creating the instance you can freely use the package
 
 # Methods
 
-1.  ## Inserting new user
+## 1.  Inserting new user
 To insert a new user into the API, call the `InsertNewUser` method and pass the username and password as parameters:
 
 ```csharp
@@ -41,7 +41,7 @@ The method returns a boolean value indicating whether the operation was successf
 
 
 
-2.  ## Getting all users
+## 2.   Getting all users
 To get all users from the API, call the `GetAllUsers` method:
 
 ```csharp
@@ -53,7 +53,7 @@ The method returns a string containing the JSON response from the API.
 
 
 
-3.  ## Getting all products
+## 3.  Getting all products
 To get all products from the API, call the `GetAllProducts` method:
 
 ```csharp
