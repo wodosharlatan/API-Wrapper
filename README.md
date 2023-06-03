@@ -1,4 +1,4 @@
-# <ADD NAME HERE!>
+# wodosharlatanAPIwrapper
 
 A C# wrapper for <a href="https://github.com/wodosharlatan/REST-API-DB">my awesome REST API</a>
 
@@ -6,7 +6,7 @@ A C# wrapper for <a href="https://github.com/wodosharlatan/REST-API-DB">my aweso
 
 ## Installation
 
-<ADD NAME HERE!> can be installed via NuGet Package Manager:
+wodosharlatanAPIwrapper can be installed via NuGet Package Manager:
 
 ```powershell
 Install-Package wodosharlatanAPIwrapper -Version 1.0.0
@@ -18,7 +18,7 @@ dotnet add package wodosharlatanAPIwrapper --version 1.0.0
 ```
 
 ## Usage
-First, you need to create an instance of the  <ADD NAME HERE!> class by passing your API key as a parameter:
+First, you need to create an instance of the  wodosharlatanAPIwrapper class by passing your API key as a parameter:
 
 ```csharp
 API api = new API("your_api_key_here");
@@ -32,5 +32,5 @@ WILl BE ADDED SOON
 
 
 # License
-<ADD NAME HERE!> is released under the MIT License. See <a href="https://github.com/wodosharlatan/API-Wrapper/edit/main/LICENSE">LICENSE</a> for details.
+wodosharlatanAPIwrapper is released under the MIT License. See <a href="https://github.com/wodosharlatan/API-Wrapper/edit/main/LICENSE">LICENSE</a> for details.
 
