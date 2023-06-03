@@ -1,198 +1,132 @@
+using System;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Nugge__Test
+namespace API_Wrapper
 {
-    public class APIWrap
+    public class API
     {
-        private string APIKEY;
-        HttpClient client = new HttpClient();
+        private HttpClient client;
 
-        public APIWrap(string apiString)
+        public API(string apiKey)
         {
-            APIKEY = apiString;
-            client.DefaultRequestHeaders.Add("x-api-key", APIKEY);
+            client = new HttpClient();
+            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
         }
 
-        string? PrepareUserJsonForInsert(string username, string password)
+        public async Task<string?> CreateNewUser(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            var data = new { username, password };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/new-user", content);
+            if (response.IsSuccessStatusCode)
             {
-                return null;
+                return await response.Content.ReadAsStringAsync();
             }
 
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
+        }
 
-            var data = new Dictionary<string, string>
+        public async Task<string?> Login(string username, string password)
+        {
+            var data = new { username, password };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/login", content);
+            if (response.IsSuccessStatusCode)
             {
-                { "Username", $"{username}" },
-                { "Password", $"{password}" }
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
+        }
+
+        public async Task<string?> GetAllEntries(string token)
+        {
+            var data = new { token };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/entries", content);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
+        }
+
+        public async Task<string?> GetSpecificEntry(string token, int entryID)
+        {
+            var data = new { token };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/entries/" + Convert.ToString(entryID), content);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
+        }
+
+        public async Task<string?> DeleteSpecificEntry(string token, int entryID)
+        {
+            var data = new { token };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/delete-entry/" + Convert.ToString(entryID), content);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
+        }
+
+        public async Task<string?> UpdateSpecificEntry(string token, int entryID, string ProductName, string Unit, int Count)
+        {
+            var data = new { token, ProductName, Unit, Count };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(43, 1);
+            defaultInterpolatedStringHandler.AppendLiteral("https://rest-api-db.up.railway.app/entries/");
+            defaultInterpolatedStringHandler.AppendFormatted(entryID);
+            HttpRequestMessage request = new HttpRequestMessage(requestUri: defaultInterpolatedStringHandler.ToStringAndClear(), method: new HttpMethod("PATCH"))
+            {
+                Content = content
             };
-            var json = JsonConvert.SerializeObject(data);
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
 
-            return json;
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
         }
 
-
-        string? PrepareEntryJsonForInsert(string ProductName, string Unit, string Count, string AddedBy)
+        public async Task<string?> CreateNewEntry(string token, string productName, string unit, int count)
         {
-            if ((string.IsNullOrEmpty(ProductName) || string.IsNullOrEmpty(Unit) || (string.IsNullOrEmpty(Count) || string.IsNullOrEmpty(AddedBy))))
+            var data = new { token, productName, unit, count };
+            string json = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("https://rest-api-db.up.railway.app/new-entry", content);
+            if (response.IsSuccessStatusCode)
             {
-                return null;
+                return await response.Content.ReadAsStringAsync();
             }
 
-            var data = new Dictionary<string, string>
-            {
-                { "ProductName", $"{ProductName}" },
-                { "Unit", $"{Unit}" },
-                { "Count", $"{Count}" },
-                { "AddedBy", $"{AddedBy}" }
-            };
-            var json = JsonConvert.SerializeObject(data);
-
-            return json;
+            Console.WriteLine("Error: " + response.StatusCode);
+            return null;
         }
-
-
-
-        public async Task<bool> InsertNewUser(string name, string passwd)
-        {
-            var json = PrepareUserJsonForInsert(name, passwd);
-
-            if (json == null)
-            {
-                return false;
-            }
-
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            try
-            {
-                await client.PostAsync("https://rest-api-db.up.railway.app/users", content);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public async Task<string> GetAllUsers()
-        {
-            try
-            {
-                var content = await client.GetAsync("https://rest-api-db.up.railway.app/users");
-                string result = await content.Content.ReadAsStringAsync();
-                return result;
-            }
-            catch
-            {
-                return "Unable To Get All Users";
-            }
-        }
-
-        public async Task<string> GetAllProducts()
-        {
-            try
-            {
-                var content = await client.GetAsync("https://rest-api-db.up.railway.app/entries");
-                string result = await content.Content.ReadAsStringAsync();
-                return result;
-            }
-            catch
-            {
-                return "Unable To Get All Products";
-            }
-        }
-
-        public async Task<string> GetProductByID(int id)
-        {
-            try
-            {
-                var content = await client.GetAsync($"https://rest-api-db.up.railway.app/entries/{id}");
-                string result = await content.Content.ReadAsStringAsync();
-                return result;
-            }
-            catch
-            {
-                return "Unable To Get Product";
-            }
-        }
-
-
-
-        public async Task<bool> InsertNewProduct(string ProductName, string Unit, string Count, string AddedBy)
-        {
-            var json = PrepareEntryJsonForInsert(ProductName, Unit, Count, AddedBy);
-
-            if (json == null)
-            {
-                return false;
-            }
-
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            try
-            {
-                await client.PostAsync("https://rest-api-db.up.railway.app/entries", content);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public async Task<string> DeleteProductByID(int id)
-        {
-            try
-            {
-                var content = await client.DeleteAsync($"https://rest-api-db.up.railway.app/entries/{id}");
-                string result = await content.Content.ReadAsStringAsync();
-                return result;
-            }
-            catch
-            {
-                return "Unable To Delete Product";
-            }
-        }
-
-        public async Task<int> GetCountOfProducts()
-        {
-            var content = await client.GetAsync("https://rest-api-db.up.railway.app/entries");
-            string result = await content.Content.ReadAsStringAsync();
-
-            if (string.IsNullOrEmpty(result))
-            {
-                return 0;
-            }
-
-            List<object> products = JsonConvert.DeserializeObject<List<object>>(result);
-            int count = products.Count;
-
-            return count;
-        }
-
-        public async Task<bool> UpdateExistingProduct(int Product_ID, string ProductName, string Unit, string Count, string AddedBy)
-        {
-            var json = PrepareEntryJsonForInsert(ProductName, Unit, Count, AddedBy);
-
-            if (json == null)
-            {
-                return false;
-            }
-
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            try
-            {
-                await client.PatchAsync($"https://rest-api-db.up.railway.app/entries/{Product_ID}", content);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-
     }
 }
